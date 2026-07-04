@@ -8,6 +8,10 @@ if (!date_default_timezone_set($zonaHorariaApp)) {
     date_default_timezone_set($zonaHorariaApp);
 }
 
+if (!defined('APP_TIMEZONE')) {
+    define('APP_TIMEZONE', $zonaHorariaApp);
+}
+
 $servidor = getenv('DB_HOST') ?: 'base_datos';
 $puerto = getenv('DB_PORT') ?: '3306';
 $nombreBaseDatos = getenv('DB_NAME') ?: 'aplicacion_dinamica';

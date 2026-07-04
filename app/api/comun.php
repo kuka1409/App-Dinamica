@@ -222,11 +222,24 @@ function detectar_navegador(string $userAgent): string
     return 'No identificado';
 }
 
+function obtener_zona_horaria_auditoria(): DateTimeZone
+{
+    // No dependemos del reloj por defecto del contenedor, porque Docker/MySQL
+    // suelen quedar en UTC. Para auditoría usamos explícitamente Chile.
+    $zonaHorariaApp = defined('APP_TIMEZONE')
+        ? (string) APP_TIMEZONE
+        : (getenv('APP_TIMEZONE') ?: 'America/Santiago');
+
+    try {
+        return new DateTimeZone($zonaHorariaApp);
+    } catch (Throwable $excepcion) {
+        return new DateTimeZone('America/Santiago');
+    }
+}
+
 function obtener_fecha_hora_auditoria(): string
 {
-    $zonaHoraria = new DateTimeZone(date_default_timezone_get() ?: 'America/Santiago');
-
-    return (new DateTimeImmutable('now', $zonaHoraria))->format('Y-m-d H:i:s');
+    return (new DateTimeImmutable('now', obtener_zona_horaria_auditoria()))->format('Y-m-d H:i:s');
 }
 
 function obtener_usuario_log(PDO $conexion, ?int $idUsuario): array
