@@ -222,6 +222,13 @@ function detectar_navegador(string $userAgent): string
     return 'No identificado';
 }
 
+function obtener_fecha_hora_auditoria(): string
+{
+    $zonaHoraria = new DateTimeZone(date_default_timezone_get() ?: 'America/Santiago');
+
+    return (new DateTimeImmutable('now', $zonaHoraria))->format('Y-m-d H:i:s');
+}
+
 function obtener_usuario_log(PDO $conexion, ?int $idUsuario): array
 {
     $usuarioSesion = usuario_autenticado();
@@ -281,7 +288,8 @@ function registrar_log(
                 ip,
                 sistema_operativo,
                 navegador,
-                user_agent
+                user_agent,
+                fecha_evento
              ) VALUES (
                 :id_usuario,
                 :usuario_nombre,
@@ -295,7 +303,8 @@ function registrar_log(
                 :ip,
                 :sistema_operativo,
                 :navegador,
-                :user_agent
+                :user_agent,
+                :fecha_evento
              )'
         );
 
@@ -313,6 +322,7 @@ function registrar_log(
             ':sistema_operativo' => detectar_sistema_operativo($userAgent),
             ':navegador' => detectar_navegador($userAgent),
             ':user_agent' => $userAgent !== '' ? $userAgent : null,
+            ':fecha_evento' => obtener_fecha_hora_auditoria(),
         ]);
     } catch (Throwable $excepcion) {
         // El log no debe romper la operación principal.

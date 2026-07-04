@@ -13,7 +13,7 @@ function mostrarLogs(contenedor, logs) {
     const encabezado = document.createElement('thead');
     const filaEncabezado = document.createElement('tr');
 
-    ['Fecha', 'Hora', 'Usuario', 'Movimiento', 'Ubicación', 'Tabla', 'Registro', 'IP', 'Sistema', 'Navegador', 'Detalle'].forEach((titulo) => {
+    ['Fecha', 'Hora', 'Usuario', 'Movimiento', 'Ubicación', 'Tabla', 'Registro', 'IP_HOST_CLIENTE', 'Sistema', 'Navegador', 'Detalle'].forEach((titulo) => {
         filaEncabezado.appendChild(crearElemento('th', '', titulo));
     });
 
@@ -26,7 +26,7 @@ function mostrarLogs(contenedor, logs) {
         const usuario = log.usuario_nombre
             ? `${log.usuario_nombre} (${log.usuario_rol || 'sin rol'})`
             : 'Usuario eliminado o no disponible';
-        const fechaEvento = String(log.fecha_evento || '').split(' ')[0] || 'Sin fecha';
+        const fechaEvento = log.fecha_evento || 'Sin fecha';
 
         [
             fechaEvento,

@@ -23,8 +23,9 @@ try {
             l.sistema_operativo,
             l.navegador,
             l.user_agent,
-            l.fecha_evento,
-            DATE_FORMAT(l.fecha_evento, "%H:%i:%s") AS hora_evento
+            DATE_FORMAT(l.fecha_evento, "%d/%m/%Y") AS fecha_evento,
+            DATE_FORMAT(l.fecha_evento, "%H:%i:%s") AS hora_evento,
+            DATE_FORMAT(l.fecha_evento, "%d/%m/%Y, %H:%i:%s") AS fecha_hora
          FROM logs_sistema l
          ORDER BY l.fecha_evento DESC, l.id DESC
          LIMIT 150'

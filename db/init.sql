@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS logs_sistema (
     sistema_operativo VARCHAR(120) NULL,
     navegador VARCHAR(120) NULL,
     user_agent TEXT NULL,
-    fecha_evento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_evento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_logs_usuario
         FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE SET NULL,
     INDEX idx_logs_usuario (id_usuario),

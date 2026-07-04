@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 
+$zonaHorariaApp = getenv('APP_TIMEZONE') ?: 'America/Santiago';
+
+if (!date_default_timezone_set($zonaHorariaApp)) {
+    $zonaHorariaApp = 'America/Santiago';
+    date_default_timezone_set($zonaHorariaApp);
+}
+
 $servidor = getenv('DB_HOST') ?: 'base_datos';
 $puerto = getenv('DB_PORT') ?: '3306';
 $nombreBaseDatos = getenv('DB_NAME') ?: 'aplicacion_dinamica';
@@ -20,6 +27,12 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false,
         ]
     );
+
+    // MySQL suele trabajar en UTC dentro de Docker. Esta línea alinea la sesión
+    // de la base de datos con la zona horaria configurada para la aplicación.
+    $zonaHoraria = new DateTimeZone($zonaHorariaApp);
+    $offsetZonaHoraria = (new DateTimeImmutable('now', $zonaHoraria))->format('P');
+    $conexion->exec('SET time_zone = ' . $conexion->quote($offsetZonaHoraria));
 } catch (PDOException $excepcion) {
     $esPeticionApi = str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/api/');
 

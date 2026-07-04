@@ -5,6 +5,8 @@ services:
     ports:
       - "${APP_PORT:-8080}:80"
     environment:
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/Santiago}
+      TZ: ${APP_TIMEZONE:-America/Santiago}
       DB_HOST: base_datos
       DB_PORT: 3306
       DB_NAME: ${MYSQL_DATABASE:-aplicacion_dinamica}
@@ -23,6 +25,7 @@ services:
     container_name: aplicacion_dinamica_bd
     restart: unless-stopped
     environment:
+      TZ: ${APP_TIMEZONE:-America/Santiago}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-aplicacion_dinamica}
       MYSQL_USER: ${MYSQL_USER:-usuario_app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-clave_app}
