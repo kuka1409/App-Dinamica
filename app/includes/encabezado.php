@@ -44,36 +44,70 @@ $rutaBase = $rutaBase ?? '';
 
                 <?php if ($usuarioSesion !== null): ?>
                     <nav class="nav" aria-label="Navegación principal">
-                        <a class="nav__link<?= clase_menu_activa($paginaActual, 'inicio') ?>" href="<?= escapar($rutaBase) ?>index.php">Inicio</a>
+                        <a class="nav__link<?= clase_menu_activa($paginaActual, 'inicio') ?>" href="<?= escapar($rutaBase) ?>index.php">
+                            <span class="nav__top-icon nav__top-icon--inicio" aria-hidden="true"></span>
+                            <span>Inicio</span>
+                        </a>
 
                         <div class="nav__dropdown">
                             <button class="nav__link nav__button" type="button" aria-haspopup="true" aria-expanded="false">
-                                Gestión
+                                <span class="nav__top-icon nav__top-icon--gestion" aria-hidden="true"></span>
+                                <span>Gestión</span>
                             </button>
                             <div class="nav__menu" role="menu">
                                 <span class="nav__menu-title">Tareas</span>
-                                <a href="<?= escapar($rutaBase) ?>paginas/tareas_crear.php" role="menuitem">Crear tarea</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/tareas_listar.php" role="menuitem">Ver tareas</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/tareas_actualizar.php" role="menuitem">Actualizar tarea</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/tareas_eliminar.php" role="menuitem">Eliminar tarea</a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/tareas_crear.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--crear" aria-hidden="true"></span>
+                                    <span>Crear tarea</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/tareas_listar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--ver" aria-hidden="true"></span>
+                                    <span>Ver tareas</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/tareas_actualizar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--editar" aria-hidden="true"></span>
+                                    <span>Actualizar tarea</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/tareas_eliminar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--eliminar" aria-hidden="true"></span>
+                                    <span>Eliminar tarea</span>
+                                </a>
 
                                 <span class="nav__menu-title">Subtareas</span>
-                                <a href="<?= escapar($rutaBase) ?>paginas/subtareas_crear.php" role="menuitem">Crear subtarea</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/subtareas_listar.php" role="menuitem">Ver subtareas</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/subtareas_actualizar.php" role="menuitem">Actualizar subtarea</a>
-                                <a href="<?= escapar($rutaBase) ?>paginas/subtareas_eliminar.php" role="menuitem">Eliminar subtarea</a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/subtareas_crear.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--crear" aria-hidden="true"></span>
+                                    <span>Crear subtarea</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/subtareas_listar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--ver" aria-hidden="true"></span>
+                                    <span>Ver subtareas</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/subtareas_actualizar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--editar" aria-hidden="true"></span>
+                                    <span>Actualizar subtarea</span>
+                                </a>
+                                <a class="nav__menu-link" href="<?= escapar($rutaBase) ?>paginas/subtareas_eliminar.php" role="menuitem">
+                                    <span class="nav__menu-icon nav__menu-icon--eliminar" aria-hidden="true"></span>
+                                    <span>Eliminar subtarea</span>
+                                </a>
                             </div>
                         </div>
 
                         <?php if (usuario_es_auditor()): ?>
-                            <a class="nav__link<?= clase_menu_activa($paginaActual, 'auditoria') ?>" href="<?= escapar($rutaBase) ?>paginas/auditoria.php">Auditoría</a>
+                            <a class="nav__link<?= clase_menu_activa($paginaActual, 'auditoria') ?>" href="<?= escapar($rutaBase) ?>paginas/auditoria.php">
+                                <span class="nav__top-icon nav__top-icon--auditoria" aria-hidden="true"></span>
+                                <span>Auditoría</span>
+                            </a>
                         <?php endif; ?>
                     </nav>
 
                     <div class="topbar__usuario">
                         <span><?= escapar((string) $usuarioSesion['nombre']) ?></span>
                         <small><?= escapar((string) $usuarioSesion['rol']) ?></small>
-                        <button class="button button--ghost button--small" type="button" data-accion="cerrar-sesion">Salir</button>
+                        <button class="button button--ghost button--small" type="button" data-accion="cerrar-sesion">
+                            <span class="button__icon button__icon--cerrar-sesion" aria-hidden="true"></span>
+                            <span>Salir</span>
+                        </button>
                     </div>
                 <?php endif; ?>
             </header>

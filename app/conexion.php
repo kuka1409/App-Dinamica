@@ -32,8 +32,8 @@ try {
         ]
     );
 
-    // MySQL suele trabajar en UTC dentro de Docker. Esta línea alinea la sesión
-    // de la base de datos con la zona horaria configurada para la aplicación.
+    // Alinea la sesion de MySQL con la zona horaria configurada para la app.
+    // Esto evita que los registros de auditoria queden en UTC dentro de Docker.
     $zonaHoraria = new DateTimeZone($zonaHorariaApp);
     $offsetZonaHoraria = (new DateTimeImmutable('now', $zonaHoraria))->format('P');
     $conexion->exec('SET time_zone = ' . $conexion->quote($offsetZonaHoraria));

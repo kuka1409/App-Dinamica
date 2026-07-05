@@ -1,4 +1,4 @@
-# TaskManager saneado con usuarios y roles
+# TaskManager modular con usuarios, roles y auditoría
 
 Proyecto limpio para ejecutar en Codespaces o en local con Docker.
 
@@ -14,6 +14,7 @@ Proyecto limpio para ejecutar en Codespaces o en local con Docker.
 - Los roles disponibles son `usuario` y `auditor`.
 - La página `auditoria.php` y el endpoint `api/listar_logs.php` solo pueden ser usados por auditores.
 - Se registra auditoría de creación, actualización, eliminación, lectura, inicio de sesión y cierre de sesión.
+- La tabla de logs no usa columna `ubicacion`; la auditoría se explica con tipo de movimiento, módulo calculado, tabla afectada, ID y detalle.
 
 ## Comandos
 

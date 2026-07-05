@@ -1,6 +1,6 @@
--- Parche opcional para bases de datos ya creadas.
--- Úsalo si NO quieres borrar el volumen de MySQL.
--- Deja la columna del log preparada para recibir la hora local enviada por PHP.
+-- Parche para bases de datos ya creadas con la version anterior.
+-- Cambia fecha_evento a DATETIME para que el log conserve exactamente
+-- la hora calculada por PHP en America/Santiago y no la convierta a UTC.
 
 ALTER TABLE logs_sistema
     MODIFY fecha_evento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;

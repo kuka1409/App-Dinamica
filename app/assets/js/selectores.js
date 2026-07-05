@@ -1,5 +1,37 @@
-// Carga y comportamiento de selectores de tareas y subtareas.
+/**
+ * Archivo: selectores.js
+ *
+ * Este archivo prepara y actualiza los selectores de tareas y subtareas.
+ * Tambien rellena formularios de actualizacion cuando el usuario cambia
+ * una opcion en un selector.
+ *
+ * Funciones principales:
+ * - Preparar eventos change.
+ * - Cargar opciones desde el estado.
+ * - Rellenar selectores dinamicos.
+ * - Completar formularios con datos obtenidos desde la API.
+ */
 
+/**
+ * Proposito:
+ * Prepara los selectores de tareas y subtareas disponibles en la pagina actual.
+ *
+ * Uso:
+ * Se ejecuta al iniciar el frontend para cargar opciones y registrar eventos change.
+ *
+ * Argumentos:
+ * - No recibe argumentos.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Carga datos y rellena selectores.
+ *
+ * Flujo:
+ * 1. Busca selectores de tareas y subtareas.
+ * 2. Registra eventos change en selectores por nombre.
+ * 3. Si existen ambos tipos, carga tareas y subtareas en paralelo.
+ * 4. Si existe solo un tipo, carga solo los datos necesarios.
+ * 5. Rellena las opciones visibles en los selectores.
+ */
 function prepararSelectores() {
     const selectoresTareas = document.querySelectorAll('select[data-select="tareas"]');
     const selectoresSubtareas = document.querySelectorAll('select[data-select="subtareas"]');
@@ -29,6 +61,26 @@ function prepararSelectores() {
     }
 }
 
+/**
+ * Proposito:
+ * Carga los datos de una tarea seleccionada y completa el formulario de actualizacion.
+ *
+ * Uso:
+ * Se usa cuando cambia un selector de id_tarea dentro del formulario actualizar-tarea.
+ *
+ * Argumentos:
+ * - evento {Event}: Evento change generado por el selector de tareas.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Completa campos del formulario.
+ *
+ * Flujo:
+ * 1. Obtiene el selector que disparo el evento.
+ * 2. Verifica que pertenezca al formulario correcto y tenga valor.
+ * 3. Solicita la tarea seleccionada al backend.
+ * 4. Copia titulo y descripcion en el formulario.
+ * 5. Limpia mensajes si todo sale bien o muestra error si falla.
+ */
 async function manejarCambioTarea(evento) {
     const selector = evento.currentTarget;
     const formulario = selector.closest('form');
@@ -50,6 +102,26 @@ async function manejarCambioTarea(evento) {
     }
 }
 
+/**
+ * Proposito:
+ * Carga los datos de una subtarea seleccionada y completa el formulario de actualizacion.
+ *
+ * Uso:
+ * Se usa cuando cambia un selector de id_subtarea dentro del formulario actualizar-subtarea.
+ *
+ * Argumentos:
+ * - evento {Event}: Evento change generado por el selector de subtareas.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Completa campos del formulario.
+ *
+ * Flujo:
+ * 1. Obtiene el selector que disparo el evento.
+ * 2. Verifica que pertenezca al formulario correcto y tenga valor.
+ * 3. Solicita la subtarea seleccionada al backend.
+ * 4. Copia tarea asociada, titulo, descripcion y estado completado.
+ * 5. Limpia mensajes si todo sale bien o muestra error si falla.
+ */
 async function manejarCambioSubtarea(evento) {
     const selector = evento.currentTarget;
     const formulario = selector.closest('form');
@@ -73,6 +145,28 @@ async function manejarCambioSubtarea(evento) {
     }
 }
 
+/**
+ * Proposito:
+ * Rellena todos los selectores de tareas con las tareas disponibles en el estado global.
+ *
+ * Uso:
+ * Se usa despues de cargar tareas o despues de crear, editar o eliminar registros.
+ *
+ * Argumentos:
+ * - valorSeleccionado {string|number}: Valor que debe quedar seleccionado si existe.
+ * - opciones {object}: Opciones de comportamiento, como dispararCambio.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Actualiza opciones de selectores en el DOM.
+ *
+ * Flujo:
+ * 1. Define si debe disparar el evento change automaticamente.
+ * 2. Recorre todos los selectores marcados como tareas.
+ * 3. Calcula el valor actual desde parametro, selector o URL.
+ * 4. Limpia opciones anteriores y agrega una opcion inicial.
+ * 5. Inserta una opcion por cada tarea disponible.
+ * 6. Selecciona el valor correspondiente y dispara change si aplica.
+ */
 function rellenarSelectoresTareas(valorSeleccionado = '', opciones = {}) {
     const dispararCambio = opciones.dispararCambio !== false;
 
@@ -101,6 +195,28 @@ function rellenarSelectoresTareas(valorSeleccionado = '', opciones = {}) {
     });
 }
 
+/**
+ * Proposito:
+ * Rellena todos los selectores de subtareas con las subtareas disponibles en el estado global.
+ *
+ * Uso:
+ * Se usa despues de cargar subtareas o despues de crear, editar o eliminar registros.
+ *
+ * Argumentos:
+ * - valorSeleccionado {string|number}: Valor que debe quedar seleccionado si existe.
+ * - opciones {object}: Opciones de comportamiento, como dispararCambio.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Actualiza opciones de selectores en el DOM.
+ *
+ * Flujo:
+ * 1. Define si debe disparar el evento change automaticamente.
+ * 2. Recorre todos los selectores marcados como subtareas.
+ * 3. Calcula el valor actual desde parametro, selector o URL.
+ * 4. Limpia opciones anteriores y agrega una opcion inicial.
+ * 5. Inserta una opcion por cada subtarea disponible.
+ * 6. Selecciona el valor correspondiente y dispara change si aplica.
+ */
 function rellenarSelectoresSubtareas(valorSeleccionado = '', opciones = {}) {
     const dispararCambio = opciones.dispararCambio !== false;
 

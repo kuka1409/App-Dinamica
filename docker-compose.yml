@@ -5,13 +5,13 @@ services:
     ports:
       - "${APP_PORT:-8080}:80"
     environment:
-      APP_TIMEZONE: ${APP_TIMEZONE:-America/Santiago}
-      TZ: ${APP_TIMEZONE:-America/Santiago}
       DB_HOST: base_datos
       DB_PORT: 3306
       DB_NAME: ${MYSQL_DATABASE:-aplicacion_dinamica}
       DB_USER: ${MYSQL_USER:-usuario_app}
       DB_PASSWORD: ${MYSQL_PASSWORD:-clave_app}
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/Santiago}
+      TZ: ${APP_TIMEZONE:-America/Santiago}
     volumes:
       - ./app:/var/www/html
     depends_on:

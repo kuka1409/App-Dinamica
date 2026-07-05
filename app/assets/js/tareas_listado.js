@@ -1,5 +1,38 @@
-// Renderizado y comportamiento del listado de tareas.
+/**
+ * Archivo: tareas_listado.js
+ *
+ * Este archivo renderiza y controla el listado principal de tareas. Construye
+ * las tarjetas de tareas, sus subtareas desplegables, el progreso visual y los
+ * eventos para expandir o cambiar estado de subtareas.
+ *
+ * Funciones principales:
+ * - Mostrar tareas en tarjetas.
+ * - Crear enlaces de accion.
+ * - Renderizar subtareas desplegables.
+ * - Calcular estados y progreso.
+ * - Manejar clicks y cambios dentro del listado.
+ */
 
+/**
+ * Proposito:
+ * Muestra el listado principal de tareas dentro de un contenedor.
+ *
+ * Uso:
+ * Se usa despues de cargar tareas o cuando se necesita refrescar la lista visual.
+ *
+ * Argumentos:
+ * - contenedor {HTMLElement}: Elemento donde se insertaran las tarjetas de tareas.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Renderiza tarjetas en el DOM.
+ *
+ * Flujo:
+ * 1. Limpia el contenido actual del contenedor.
+ * 2. Si no hay tareas, muestra un estado vacio.
+ * 3. Crea un fragmento para insertar varias tarjetas de forma eficiente.
+ * 4. Crea una tarjeta por cada tarea del estado global.
+ * 5. Inserta el fragmento completo en el contenedor.
+ */
 function mostrarTareas(contenedor) {
     contenedor.replaceChildren();
 
@@ -17,6 +50,27 @@ function mostrarTareas(contenedor) {
     contenedor.appendChild(fragmento);
 }
 
+/**
+ * Proposito:
+ * Crea la tarjeta visual completa de una tarea.
+ *
+ * Uso:
+ * Se usa dentro de mostrarTareas para transformar cada objeto tarea en HTML.
+ *
+ * Argumentos:
+ * - tarea {object}: Datos de la tarea recibidos desde el estado global.
+ *
+ * Retorna:
+ * - {HTMLElement}: Tarjeta HTML lista para insertarse en la pagina.
+ *
+ * Flujo:
+ * 1. Calcula el id, estado y si la tarea esta expandida.
+ * 2. Crea la estructura principal de la tarjeta.
+ * 3. Agrega titulo, descripcion, acciones y estado visual.
+ * 4. Agrega metadatos, progreso y pie de tarjeta.
+ * 5. Si la tarea esta expandida, agrega el desplegable de subtareas.
+ * 6. Retorna la tarjeta terminada.
+ */
 function crearTarjetaTarea(tarea) {
     const idTarea = Number(tarea.id);
     const estadoTarea = obtenerEstadoTarea(tarea);
@@ -72,6 +126,27 @@ function crearTarjetaTarea(tarea) {
     return tarjeta;
 }
 
+/**
+ * Proposito:
+ * Crea el boton que permite mostrar u ocultar las subtareas de una tarea.
+ *
+ * Uso:
+ * Se usa en el pie de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea asociada al boton.
+ * - estaExpandida {boolean}: Indica si la tarea ya muestra sus subtareas.
+ *
+ * Retorna:
+ * - {HTMLButtonElement}: Boton configurado para alternar subtareas.
+ *
+ * Flujo:
+ * 1. Crea el boton con el icono correspondiente.
+ * 2. Define el tipo button para evitar envios de formulario.
+ * 3. Guarda la accion y el id de tarea en dataset.
+ * 4. Configura atributos accesibles segun el estado expandido.
+ * 5. Retorna el boton listo para usar.
+ */
 function crearBotonAlternarSubtareas(tarea, estaExpandida) {
     const boton = crearElemento('button', 'group-card__toggle-trigger', estaExpandida ? '▴' : '▾');
     boton.type = 'button';
@@ -83,6 +158,25 @@ function crearBotonAlternarSubtareas(tarea, estaExpandida) {
     return boton;
 }
 
+/**
+ * Proposito:
+ * Crea un enlace para agregar una subtarea a una tarea especifica.
+ *
+ * Uso:
+ * Se usa en el pie de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea a la que se asociara la nueva subtarea.
+ *
+ * Retorna:
+ * - {HTMLAnchorElement}: Enlace hacia el formulario de crear subtarea.
+ *
+ * Flujo:
+ * 1. Crea el enlace con estilos de boton.
+ * 2. Construye la URL con el id de la tarea.
+ * 3. Agrega una etiqueta accesible.
+ * 4. Retorna el enlace configurado.
+ */
 function crearEnlaceAgregarSubtarea(tarea) {
     const enlace = crearElemento('a', 'button button--soft button--small group-card__add-subtask', 'Agregar subtarea');
     enlace.href = `${rutaBase}paginas/subtareas_crear.php?id_tarea=${encodeURIComponent(tarea.id)}`;
@@ -90,6 +184,26 @@ function crearEnlaceAgregarSubtarea(tarea) {
     return enlace;
 }
 
+/**
+ * Proposito:
+ * Crea el enlace de edicion de una tarea.
+ *
+ * Uso:
+ * Se usa en el encabezado de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea que se quiere editar.
+ *
+ * Retorna:
+ * - {HTMLAnchorElement}: Enlace hacia el formulario de actualizar tarea.
+ *
+ * Flujo:
+ * 1. Crea el elemento enlace.
+ * 2. Construye la URL con el id de tarea.
+ * 3. Agrega atributos accesibles y titulo.
+ * 4. Inserta el icono de editar.
+ * 5. Retorna el enlace configurado.
+ */
 function crearEnlaceEditarTarea(tarea) {
     const enlace = crearElemento('a', 'group-card__action-trigger group-card__edit-trigger group-card__edit-trigger--link');
     enlace.href = `${rutaBase}paginas/tareas_actualizar.php?id_tarea=${encodeURIComponent(tarea.id)}`;
@@ -99,6 +213,26 @@ function crearEnlaceEditarTarea(tarea) {
     return enlace;
 }
 
+/**
+ * Proposito:
+ * Crea el enlace de eliminacion de una tarea.
+ *
+ * Uso:
+ * Se usa en el encabezado de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea que se quiere eliminar.
+ *
+ * Retorna:
+ * - {HTMLAnchorElement}: Enlace hacia el formulario de eliminar tarea.
+ *
+ * Flujo:
+ * 1. Crea el elemento enlace.
+ * 2. Construye la URL con el id de tarea.
+ * 3. Agrega atributos accesibles y titulo.
+ * 4. Inserta el icono de eliminar.
+ * 5. Retorna el enlace configurado.
+ */
 function crearEnlaceEliminarTarea(tarea) {
     const enlace = crearElemento('a', 'group-card__action-trigger group-card__delete-trigger group-card__delete-trigger--link');
     enlace.href = `${rutaBase}paginas/tareas_eliminar.php?id_tarea=${encodeURIComponent(tarea.id)}`;
@@ -108,6 +242,26 @@ function crearEnlaceEliminarTarea(tarea) {
     return enlace;
 }
 
+/**
+ * Proposito:
+ * Crea el enlace de edicion de una subtarea.
+ *
+ * Uso:
+ * Se usa en subtareas desplegadas y en el listado general de subtareas.
+ *
+ * Argumentos:
+ * - subtarea {object}: Subtarea que se quiere editar.
+ *
+ * Retorna:
+ * - {HTMLAnchorElement}: Enlace hacia el formulario de actualizar subtarea.
+ *
+ * Flujo:
+ * 1. Crea el elemento enlace.
+ * 2. Construye la URL con id de subtarea e id de tarea.
+ * 3. Agrega atributos accesibles y titulo.
+ * 4. Inserta el icono de editar.
+ * 5. Retorna el enlace configurado.
+ */
 function crearEnlaceEditarSubtarea(subtarea) {
     const enlace = crearElemento('a', 'group-card-task__action-trigger group-card-task__edit-trigger');
     enlace.href = `${rutaBase}paginas/subtareas_actualizar.php?id_subtarea=${encodeURIComponent(subtarea.id)}&id_tarea=${encodeURIComponent(subtarea.id_tarea)}`;
@@ -117,6 +271,26 @@ function crearEnlaceEditarSubtarea(subtarea) {
     return enlace;
 }
 
+/**
+ * Proposito:
+ * Crea el enlace de eliminacion de una subtarea.
+ *
+ * Uso:
+ * Se usa en subtareas desplegadas y en el listado general de subtareas.
+ *
+ * Argumentos:
+ * - subtarea {object}: Subtarea que se quiere eliminar.
+ *
+ * Retorna:
+ * - {HTMLAnchorElement}: Enlace hacia el formulario de eliminar subtarea.
+ *
+ * Flujo:
+ * 1. Crea el elemento enlace.
+ * 2. Construye la URL con id de subtarea e id de tarea.
+ * 3. Agrega atributos accesibles y titulo.
+ * 4. Inserta el icono de eliminar.
+ * 5. Retorna el enlace configurado.
+ */
 function crearEnlaceEliminarSubtarea(subtarea) {
     const enlace = crearElemento('a', 'group-card-task__action-trigger group-card-task__delete-trigger');
     enlace.href = `${rutaBase}paginas/subtareas_eliminar.php?id_subtarea=${encodeURIComponent(subtarea.id)}&id_tarea=${encodeURIComponent(subtarea.id_tarea)}`;
@@ -126,18 +300,73 @@ function crearEnlaceEliminarSubtarea(subtarea) {
     return enlace;
 }
 
+/**
+ * Proposito:
+ * Crea el icono visual usado para acciones de edicion.
+ *
+ * Uso:
+ * Se usa dentro de enlaces de editar tareas y subtareas.
+ *
+ * Argumentos:
+ * - No recibe argumentos.
+ *
+ * Retorna:
+ * - {HTMLElement}: Elemento span con las clases del icono de editar.
+ *
+ * Flujo:
+ * 1. Crea un span con clases de icono.
+ * 2. Marca el icono como decorativo con aria-hidden.
+ * 3. Retorna el elemento.
+ */
 function crearIconoEditar() {
-    const icono = crearElemento('span', 'action-icon', '✎');
+    const icono = crearElemento('span', 'action-icon action-icon--editar');
     icono.setAttribute('aria-hidden', 'true');
     return icono;
 }
 
+/**
+ * Proposito:
+ * Crea el icono visual usado para acciones de eliminacion.
+ *
+ * Uso:
+ * Se usa dentro de enlaces de eliminar tareas y subtareas.
+ *
+ * Argumentos:
+ * - No recibe argumentos.
+ *
+ * Retorna:
+ * - {HTMLElement}: Elemento span con las clases del icono de eliminar.
+ *
+ * Flujo:
+ * 1. Crea un span con clases de icono.
+ * 2. Marca el icono como decorativo con aria-hidden.
+ * 3. Retorna el elemento.
+ */
 function crearIconoEliminar() {
-    const icono = crearElemento('span', 'action-icon', '×');
+    const icono = crearElemento('span', 'action-icon action-icon--eliminar');
     icono.setAttribute('aria-hidden', 'true');
     return icono;
 }
 
+/**
+ * Proposito:
+ * Expande automaticamente una tarea si su id viene en la URL.
+ *
+ * Uso:
+ * Se usa al cargar el listado de tareas despues de venir desde otra operacion.
+ *
+ * Argumentos:
+ * - No recibe argumentos.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Modifica estado.idsTareasExpandidas si corresponde.
+ *
+ * Flujo:
+ * 1. Lee el parametro id_tarea desde la URL.
+ * 2. Valida que sea un numero positivo.
+ * 3. Verifica que exista una tarea con ese id.
+ * 4. Si existe, agrega el id al conjunto de tareas expandidas.
+ */
 function expandirTareaDesdeUrl() {
     const idTarea = Number(obtenerParametroUrl('id_tarea'));
 
@@ -152,6 +381,26 @@ function expandirTareaDesdeUrl() {
     }
 }
 
+/**
+ * Proposito:
+ * Resalta y desplaza hacia una tarea indicada en la URL.
+ *
+ * Uso:
+ * Se usa despues de renderizar tareas para ubicar visualmente una tarea especifica.
+ *
+ * Argumentos:
+ * - contenedor {HTMLElement}: Contenedor donde estan renderizadas las tarjetas.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Aplica una clase temporal y hace scroll.
+ *
+ * Flujo:
+ * 1. Lee el parametro id_tarea desde la URL.
+ * 2. Valida que sea un numero positivo.
+ * 3. Busca la tarjeta correspondiente en el contenedor.
+ * 4. Si la encuentra, agrega clase de enfoque y hace scroll.
+ * 5. Despues de un tiempo, elimina la clase de enfoque.
+ */
 function enfocarTareaDesdeUrl(contenedor) {
     const idTarea = Number(obtenerParametroUrl('id_tarea'));
 
@@ -175,6 +424,27 @@ function enfocarTareaDesdeUrl(contenedor) {
     }, 2600);
 }
 
+/**
+ * Proposito:
+ * Crea la seccion desplegable con las subtareas de una tarea.
+ *
+ * Uso:
+ * Se usa cuando una tarjeta de tarea esta expandida.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea que contiene o referencia sus subtareas.
+ *
+ * Retorna:
+ * - {HTMLElement}: Seccion HTML con el listado de subtareas.
+ *
+ * Flujo:
+ * 1. Crea la seccion y su encabezado.
+ * 2. Obtiene la lista de subtareas de la tarea.
+ * 3. Si no hay subtareas, muestra un mensaje vacio.
+ * 4. Ordena subtareas pendientes antes que completadas.
+ * 5. Crea un elemento visual por cada subtarea.
+ * 6. Retorna la seccion terminada.
+ */
 function crearDesplegableSubtareas(tarea) {
     const seccion = crearElemento('section', 'group-card__dropdown');
     const subtareas = Array.isArray(tarea.subtareas) ? tarea.subtareas : [];
@@ -216,6 +486,27 @@ function crearDesplegableSubtareas(tarea) {
     return seccion;
 }
 
+/**
+ * Proposito:
+ * Crea el elemento visual de una subtarea dentro del desplegable de una tarea.
+ *
+ * Uso:
+ * Se usa al construir el desplegable de subtareas.
+ *
+ * Argumentos:
+ * - subtarea {object}: Datos de la subtarea que se renderizara.
+ *
+ * Retorna:
+ * - {HTMLElement}: Elemento li listo para insertarse en la lista.
+ *
+ * Flujo:
+ * 1. Crea el elemento li con clase segun su estado.
+ * 2. Crea el checkbox para cambiar completada o pendiente.
+ * 3. Agrega titulo y descripcion si existe.
+ * 4. Crea la etiqueta visual de estado.
+ * 5. Agrega enlaces de editar y eliminar.
+ * 6. Retorna el elemento terminado.
+ */
 function crearElementoSubtareaDesplegable(subtarea) {
     const elemento = crearElemento(
         'li',
@@ -256,6 +547,24 @@ function crearElementoSubtareaDesplegable(subtarea) {
     return elemento;
 }
 
+/**
+ * Proposito:
+ * Crea la insignia visual del estado de una tarea.
+ *
+ * Uso:
+ * Se usa en el encabezado de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - estadoTarea {string}: Codigo interno del estado de la tarea.
+ *
+ * Retorna:
+ * - {HTMLElement}: Elemento span con texto y clase de estado.
+ *
+ * Flujo:
+ * 1. Obtiene la clase visual segun el estado.
+ * 2. Obtiene la etiqueta visible segun el estado.
+ * 3. Crea y retorna el span de insignia.
+ */
 function crearInsigniaEstadoTarea(estadoTarea) {
     return crearElemento(
         'span',
@@ -264,6 +573,26 @@ function crearInsigniaEstadoTarea(estadoTarea) {
     );
 }
 
+/**
+ * Proposito:
+ * Crea una pildora de metadato con etiqueta y valor destacado.
+ *
+ * Uso:
+ * Se usa para mostrar estado, subtareas y completadas dentro de la tarjeta.
+ *
+ * Argumentos:
+ * - etiqueta {string}: Texto descriptivo del dato.
+ * - valor {string}: Valor visible del dato.
+ *
+ * Retorna:
+ * - {HTMLElement}: Elemento HTML con etiqueta y valor.
+ *
+ * Flujo:
+ * 1. Crea el contenedor de la pildora.
+ * 2. Agrega un span para la etiqueta.
+ * 3. Agrega un strong para el valor.
+ * 4. Retorna el contenedor armado.
+ */
 function crearPildoraMetaDetallada(etiqueta, valor) {
     const pildora = crearElemento('div', 'meta-pill');
     pildora.append(
@@ -273,6 +602,26 @@ function crearPildoraMetaDetallada(etiqueta, valor) {
     return pildora;
 }
 
+/**
+ * Proposito:
+ * Crea la seccion visual de progreso de una tarea.
+ *
+ * Uso:
+ * Se usa dentro de cada tarjeta de tarea.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea desde la que se calculara el progreso.
+ *
+ * Retorna:
+ * - {HTMLElement}: Bloque HTML con porcentaje y barra de progreso.
+ *
+ * Flujo:
+ * 1. Calcula el porcentaje de progreso.
+ * 2. Crea la fila de texto con etiqueta y valor.
+ * 3. Crea la pista y el relleno de la barra.
+ * 4. Asigna el ancho del relleno segun el porcentaje.
+ * 5. Retorna el contenedor de progreso.
+ */
 function crearSeccionProgresoTarea(tarea) {
     const contenedor = crearElemento('div', 'progress-block');
     const filaTexto = crearElemento('div', 'progress-block__text');
@@ -292,6 +641,24 @@ function crearSeccionProgresoTarea(tarea) {
     return contenedor;
 }
 
+/**
+ * Proposito:
+ * Maneja clicks delegados dentro del listado de tareas.
+ *
+ * Uso:
+ * Se usa como listener del contenedor de tareas para detectar botones internos.
+ *
+ * Argumentos:
+ * - evento {MouseEvent}: Evento click generado dentro del listado.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Ejecuta acciones segun el boton clickeado.
+ *
+ * Flujo:
+ * 1. Busca el boton mas cercano con accion de tarjeta.
+ * 2. Si no hay boton, termina la funcion.
+ * 3. Si la accion es alternar subtareas, llama a alternarSubtareasTarea.
+ */
 function manejarClicListadoTareas(evento) {
     const boton = evento.target.closest('button[data-accion-tarjeta]');
 
@@ -304,6 +671,24 @@ function manejarClicListadoTareas(evento) {
     }
 }
 
+/**
+ * Proposito:
+ * Maneja cambios delegados dentro del listado de tareas.
+ *
+ * Uso:
+ * Se usa para detectar cambios en checkboxes de subtareas.
+ *
+ * Argumentos:
+ * - evento {Event}: Evento change generado dentro del listado.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Lanza la actualizacion del estado de la subtarea.
+ *
+ * Flujo:
+ * 1. Obtiene el elemento que disparo el evento.
+ * 2. Verifica que sea un input y que tenga la accion correcta.
+ * 3. Llama a alternarEstadoSubtarea con la casilla y el contenedor.
+ */
 function manejarCambioListadoTareas(evento) {
     const casilla = evento.target;
 
@@ -314,6 +699,26 @@ function manejarCambioListadoTareas(evento) {
     alternarEstadoSubtarea(casilla, evento.currentTarget);
 }
 
+/**
+ * Proposito:
+ * Alterna si una tarea muestra u oculta sus subtareas.
+ *
+ * Uso:
+ * Se usa cuando el usuario presiona el boton de desplegar subtareas.
+ *
+ * Argumentos:
+ * - idTarea {number}: Identificador de la tarea que se alternara.
+ * - contenedor {HTMLElement}: Contenedor donde se renderiza el listado.
+ *
+ * Retorna:
+ * - {void}: No retorna datos. Actualiza estado y vuelve a renderizar.
+ *
+ * Flujo:
+ * 1. Verifica si el id ya esta en tareas expandidas.
+ * 2. Si existe, lo elimina para cerrar el desplegable.
+ * 3. Si no existe, lo agrega para abrir el desplegable.
+ * 4. Vuelve a renderizar el listado de tareas.
+ */
 function alternarSubtareasTarea(idTarea, contenedor) {
     if (estado.idsTareasExpandidas.has(idTarea)) {
         estado.idsTareasExpandidas.delete(idTarea);
@@ -324,6 +729,28 @@ function alternarSubtareasTarea(idTarea, contenedor) {
     mostrarTareas(contenedor);
 }
 
+/**
+ * Proposito:
+ * Cambia el estado completada/pendiente de una subtarea desde el checkbox.
+ *
+ * Uso:
+ * Se usa cuando el usuario marca o desmarca una subtarea dentro de una tarjeta.
+ *
+ * Argumentos:
+ * - casilla {HTMLInputElement}: Checkbox que contiene el id de la subtarea.
+ * - contenedor {HTMLElement}: Contenedor del listado de tareas.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Actualiza backend, estado e interfaz.
+ *
+ * Flujo:
+ * 1. Guarda el nuevo valor completada.
+ * 2. Deshabilita la casilla mientras se procesa.
+ * 3. Envia el cambio al endpoint correspondiente.
+ * 4. Recarga tareas y vuelve a mostrar el listado.
+ * 5. Si ocurre un error, revierte el checkbox y muestra mensaje.
+ * 6. Finalmente vuelve a habilitar la casilla.
+ */
 async function alternarEstadoSubtarea(casilla, contenedor) {
     const completada = casilla.checked;
     const mensaje = obtenerMensaje('listar-tareas');
@@ -346,6 +773,25 @@ async function alternarEstadoSubtarea(casilla, contenedor) {
     }
 }
 
+/**
+ * Proposito:
+ * Calcula el porcentaje de avance de una tarea segun sus subtareas.
+ *
+ * Uso:
+ * Se usa para mostrar la barra de progreso de cada tarjeta.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea con total de subtareas y subtareas completadas.
+ *
+ * Retorna:
+ * - {number}: Porcentaje entero entre 0 y 100.
+ *
+ * Flujo:
+ * 1. Lee el total de subtareas.
+ * 2. Si no hay subtareas, retorna 0.
+ * 3. Divide completadas por total y multiplica por 100.
+ * 4. Redondea el resultado y lo retorna.
+ */
 function calcularProgresoTarea(tarea) {
     const totalSubtareas = Number(tarea.total_subtareas || 0);
 
@@ -356,6 +802,26 @@ function calcularProgresoTarea(tarea) {
     return Math.round((Number(tarea.subtareas_completadas || 0) / totalSubtareas) * 100);
 }
 
+/**
+ * Proposito:
+ * Determina el estado logico de una tarea.
+ *
+ * Uso:
+ * Se usa para clases visuales, etiquetas y notas de la tarjeta.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea que se analizara.
+ *
+ * Retorna:
+ * - {string}: Codigo de estado como vacio, en_progreso o completado.
+ *
+ * Flujo:
+ * 1. Si la tarea ya trae un estado, lo retorna.
+ * 2. Calcula total y completadas desde la tarea.
+ * 3. Si no hay subtareas, retorna vacio.
+ * 4. Si todas estan completas, retorna completado.
+ * 5. En cualquier otro caso, retorna en_progreso.
+ */
 function obtenerEstadoTarea(tarea) {
     if (tarea.estado) {
         return tarea.estado;
@@ -375,6 +841,24 @@ function obtenerEstadoTarea(tarea) {
     return 'en_progreso';
 }
 
+/**
+ * Proposito:
+ * Convierte un codigo de estado de tarea en texto visible.
+ *
+ * Uso:
+ * Se usa para insignias y metadatos de tarjetas.
+ *
+ * Argumentos:
+ * - estadoTarea {string}: Codigo interno del estado.
+ *
+ * Retorna:
+ * - {string}: Etiqueta visible del estado.
+ *
+ * Flujo:
+ * 1. Define el mapa de estados y etiquetas.
+ * 2. Busca la etiqueta del estado recibido.
+ * 3. Retorna la etiqueta encontrada o Sin estado.
+ */
 function obtenerEtiquetaEstadoTarea(estadoTarea) {
     const etiquetas = {
         vacio: 'Sin subtareas',
@@ -385,6 +869,24 @@ function obtenerEtiquetaEstadoTarea(estadoTarea) {
     return etiquetas[estadoTarea] || 'Sin estado';
 }
 
+/**
+ * Proposito:
+ * Convierte un estado de tarea en clase CSS para la tarjeta.
+ *
+ * Uso:
+ * Se usa para aplicar estilos segun el estado de la tarea.
+ *
+ * Argumentos:
+ * - estadoTarea {string}: Codigo interno del estado.
+ *
+ * Retorna:
+ * - {string}: Sufijo de clase CSS asociado al estado.
+ *
+ * Flujo:
+ * 1. Define el mapa de estados y clases.
+ * 2. Busca la clase del estado recibido.
+ * 3. Retorna la clase encontrada o empty.
+ */
 function obtenerClaseEstadoTarea(estadoTarea) {
     const clases = {
         vacio: 'empty',
@@ -395,6 +897,25 @@ function obtenerClaseEstadoTarea(estadoTarea) {
     return clases[estadoTarea] || 'empty';
 }
 
+/**
+ * Proposito:
+ * Genera un resumen textual sobre las subtareas de una tarea.
+ *
+ * Uso:
+ * Se usa en el encabezado del desplegable de subtareas.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea con conteos de subtareas.
+ *
+ * Retorna:
+ * - {string}: Texto resumen para mostrar en pantalla.
+ *
+ * Flujo:
+ * 1. Lee total de subtareas y pendientes.
+ * 2. Si no hay subtareas, retorna mensaje de ausencia.
+ * 3. Si hay pendientes, retorna cuantas faltan por completar.
+ * 4. Si no hay pendientes, retorna que todas estan completas.
+ */
 function obtenerResumenSubtareas(tarea) {
     const totalSubtareas = Number(tarea.total_subtareas || 0);
     const subtareasPendientes = Number(tarea.subtareas_pendientes || 0);
@@ -410,6 +931,26 @@ function obtenerResumenSubtareas(tarea) {
     return 'Todas las subtareas están completas';
 }
 
+/**
+ * Proposito:
+ * Genera la nota inferior de una tarjeta de tarea.
+ *
+ * Uso:
+ * Se usa en el pie de cada tarjeta junto a la fecha de actualizacion.
+ *
+ * Argumentos:
+ * - tarea {object}: Tarea con conteos de subtareas.
+ * - estadoTarea {string}: Estado calculado de la tarea.
+ *
+ * Retorna:
+ * - {string}: Texto corto para el pie de la tarjeta.
+ *
+ * Flujo:
+ * 1. Lee la cantidad de subtareas pendientes.
+ * 2. Si hay pendientes, retorna ese conteo.
+ * 3. Si la tarea esta completada, retorna mensaje de completado.
+ * 4. Si no hay subtareas, retorna mensaje inicial.
+ */
 function obtenerNotaPieTarea(tarea, estadoTarea) {
     const subtareasPendientes = Number(tarea.subtareas_pendientes || 0);
 

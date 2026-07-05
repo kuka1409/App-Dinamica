@@ -1,5 +1,38 @@
-// Formularios para crear, actualizar y eliminar subtareas.
+/**
+ * Archivo: subtareas_formularios.js
+ *
+ * Este archivo maneja los formularios de creacion, actualizacion y eliminacion
+ * de subtareas. Se comunica con la API y actualiza selectores o mensajes segun
+ * el resultado de cada operacion.
+ *
+ * Funciones principales:
+ * - Crear subtareas.
+ * - Actualizar subtareas.
+ * - Eliminar subtareas.
+ * - Mostrar enlaces para volver a la tarea asociada.
+ */
 
+/**
+ * Proposito:
+ * Procesa el formulario para crear una nueva subtarea.
+ *
+ * Uso:
+ * Se usa cuando se envia el formulario data-formulario="crear-subtarea".
+ *
+ * Argumentos:
+ * - evento {SubmitEvent}: Evento generado al enviar el formulario.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Crea la subtarea y actualiza el formulario.
+ *
+ * Flujo:
+ * 1. Detiene el envio normal del formulario.
+ * 2. Limpia acciones visuales anteriores.
+ * 3. Convierte el formulario en objeto.
+ * 4. Envia los datos al endpoint de creacion de subtarea.
+ * 5. Reinicia el formulario conservando la tarea asociada.
+ * 6. Muestra mensaje y enlace para ver la tarea.
+ */
 async function manejarCrearSubtarea(evento) {
     evento.preventDefault();
     const formulario = evento.currentTarget;
@@ -23,6 +56,27 @@ async function manejarCrearSubtarea(evento) {
     }
 }
 
+/**
+ * Proposito:
+ * Procesa el formulario para actualizar una subtarea existente.
+ *
+ * Uso:
+ * Se usa cuando se envia el formulario data-formulario="actualizar-subtarea".
+ *
+ * Argumentos:
+ * - evento {SubmitEvent}: Evento generado al enviar el formulario.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Actualiza la subtarea y refresca selectores.
+ *
+ * Flujo:
+ * 1. Detiene el envio normal del formulario.
+ * 2. Limpia acciones visuales anteriores.
+ * 3. Convierte el formulario en objeto.
+ * 4. Agrega el estado del checkbox completada.
+ * 5. Envia los datos al endpoint de actualizacion.
+ * 6. Recarga subtareas, actualiza el selector y muestra mensaje.
+ */
 async function manejarActualizarSubtarea(evento) {
     evento.preventDefault();
     const formulario = evento.currentTarget;
@@ -43,6 +97,27 @@ async function manejarActualizarSubtarea(evento) {
     }
 }
 
+/**
+ * Proposito:
+ * Procesa el formulario para eliminar una subtarea seleccionada.
+ *
+ * Uso:
+ * Se usa cuando se envia el formulario data-formulario="eliminar-subtarea".
+ *
+ * Argumentos:
+ * - evento {SubmitEvent}: Evento generado al enviar el formulario.
+ *
+ * Retorna:
+ * - {Promise<void>}: No retorna datos. Elimina la subtarea y refresca datos.
+ *
+ * Flujo:
+ * 1. Detiene el envio normal del formulario.
+ * 2. Obtiene los datos y localiza la tarea asociada.
+ * 3. Valida que exista una subtarea seleccionada.
+ * 4. Solicita confirmacion al usuario.
+ * 5. Envia la eliminacion al backend.
+ * 6. Recarga tareas y subtareas, actualiza selectores y muestra mensaje.
+ */
 async function manejarEliminarSubtarea(evento) {
     evento.preventDefault();
     const formulario = evento.currentTarget;
